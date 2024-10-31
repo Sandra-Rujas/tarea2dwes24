@@ -11,49 +11,51 @@ import com.mysql.cj.jdbc.MysqlDataSource;
 public class ConexionBD {
 	
 	//Atributo
-	private Connection con;
+	private static Connection con;
 	
 	private static ConexionBD f;
 	
 	//Realiza la conexión.
-	private ConexionBD() {
+	public static Connection getConexion() {
 		
-		Properties properties=new Properties();
-		MysqlDataSource m=new MysqlDataSource();
-		FileInputStream fis;
-		
-		//Canal de lectura al fichero de texto plano.
 		try {
 			
-			fis=new FileInputStream("src/main/resources/db.properties");
-			//Cargamos la información del fichero Properties.
-			properties.load(fis);
+			if (con == null || con.isClosed()) {
+				
+				Properties properties = new Properties();
+				MysqlDataSource m = new MysqlDataSource();
+				FileInputStream fis;
+				fis = new FileInputStream("src/resources/db.properties");
+				properties.load(fis);
+				m.setUrl(properties.getProperty("url"));
+				m.setPassword(properties.getProperty("password"));
+				m.setUser(properties.getProperty("usuario"));
+				fis.close();
+				con = m.getConnection();
+			}
 			
-			//Asignamos al origen de datos las propiedades leídas del fichero Properties.
-			m.setUrl(properties.getProperty("url"));
-			m.setPassword(properties.getProperty("password"));
-			m.setUser(properties.getProperty("usuario"));
-		
-			//Obtenemos la conexión.
-			con=m.getConnection();
+			return con;
 			
-		}catch(SQLException e) {
+		} catch (FileNotFoundException e) {
 			
-			System.out.println("Error al conectar a la base de datos: usuario, password...");
-
+			System.out.println("Error al acceder al fichero properties " + e.getMessage());
 			
-		}catch(FileNotFoundException e) {
+		} catch (IOException e) {
 			
-			System.out.println("Error al acceder al fichero Properties" +e.getMessage());
-	
+			System.out.println("Error al leer las propiedades del fichero properties" + e.getMessage());
 			
-		}catch(IOException e){
+		} catch (SQLException e) {
 			
-			System.out.println("Error al leer las propiedades del fichero Properties"+ e.getMessage());
-		
+			System.out.println("Se ha producido una SQLException: " + e.getMessage());
 			
+		} catch (Exception e) {
+			
+			System.out.println("Se ha producido una Exception: " + e.getMessage());
+			
+			e.printStackTrace();
 		}
 		
+		return con;
 	}
 	
 	//Método estático que devuelve instancia correspondiente al atributo estático de la clase.
@@ -61,10 +63,26 @@ public class ConexionBD {
 		public static ConexionBD getCon() {
 		
 			if(f==null)
+				
 				f=new ConexionBD();
 			
 		return f;
 		
 	}
+		
+		//Método Cerrar Conexión.
+		public static void cerrarConexion() {
+			try {
+				
+				if (con != null && !con.isClosed()) {
+					con.close();
+				}
+				
+			} catch (SQLException e) {
+				System.out.println("Se ha producido una SQLException: " + e.getMessage());
+				e.printStackTrace();
+			}
+		}
+	}
 	
-}
+
