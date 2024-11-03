@@ -8,6 +8,12 @@ import java.util.Properties;
 
 import com.mysql.cj.jdbc.MysqlDataSource;
 
+import dao.CredencialDAO;
+import dao.EjemplarDAO;
+import dao.MensajeDAO;
+import dao.PersonaDAO;
+import dao.PlantaDAO;
+
 public class ConexionBD {
 	
 	//Atributo
@@ -82,6 +88,28 @@ public class ConexionBD {
 				System.out.println("Se ha producido una SQLException: " + e.getMessage());
 				e.printStackTrace();
 			}
+		}
+		
+		
+		//Conexión de la bbdd con las clases DAO.
+		public PlantaDAO getPlantaDAO() {
+			return new PlantaDAO(con);
+		}
+		
+		public EjemplarDAO getEjemplarDAO() {
+			return new EjemplarDAO(con);
+		}
+		
+		public PersonaDAO getPersonaDAO() {
+			return new PersonaDAO(con);
+		}
+		
+		public CredencialDAO getCredencialDAO() {
+			return new CredencialDAO(con);
+		}
+		
+		public MensajeDAO getMensajeDAO() {
+			return new MensajeDAO(con);
 		}
 	}
 	
