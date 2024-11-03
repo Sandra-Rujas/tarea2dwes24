@@ -8,8 +8,8 @@ public class Mensaje {
 		private Long id;    
 	    private LocalDateTime fechaHora; 
 	    private String mensaje;
-	    private Ejemplar idEjemplar;           
-	    private Persona idPersona;
+	    private Long idEjemplar;           
+	    private Long idPersona;
 		
 	    
 	    //Constructor por defecto.
@@ -19,12 +19,12 @@ public class Mensaje {
 
 
 		// Constructor
-	    public Mensaje(Long id, String mensaje, Ejemplar ejemplar, Persona persona) {
+	    public Mensaje(Long id, String mensaje, Long idEjemplar, Long idPersona) {
 			this.id = id;
 			this.fechaHora = LocalDateTime.now();
 			this.mensaje = mensaje;
-			this.idEjemplar = ejemplar;
-			this.idPersona = persona;
+			this.idEjemplar = idEjemplar;
+			this.idPersona = idPersona;
 		}
 
 	    
@@ -53,29 +53,35 @@ public class Mensaje {
 			this.mensaje = mensaje;
 		}
 
-		public Ejemplar getEjemplar() {
+
+		public Long getIdEjemplar() {
 			return idEjemplar;
 		}
 
-		public void setEjemplar(Ejemplar ejemplar) {
-			this.idEjemplar = ejemplar;
+
+		public void setIdEjemplar(Long idEjemplar) {
+			this.idEjemplar = idEjemplar;
 		}
 
-		public Persona getPersona() {
+
+		public Long getIdPersona() {
 			return idPersona;
 		}
 
-		public void setPersona(Persona persona) {
-			this.idPersona = persona;
+
+		public void setIdPersona(Long idPersona) {
+			this.idPersona = idPersona;
 		}
 
 
-		//Método toString
+		// to String
 		@Override
 		public String toString() {
-			return "Mensaje [id=" + id + ", fechaHora=" + fechaHora + ", mensaje=" + mensaje + ", ejemplar=" + idEjemplar
-					+ ", persona=" + idPersona + "]";
-		}            
+			return "Mensaje [id=" + id + ", fechaHora=" + fechaHora + ", mensaje=" + mensaje + ", idEjemplar="
+					+ idEjemplar + ", idPersona=" + idPersona + "]";
+		}
+
+		 
 	    
 	
 	

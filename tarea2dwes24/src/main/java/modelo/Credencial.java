@@ -20,6 +20,13 @@ public class Credencial {
 	}
 	
 	
+	
+	
+	public Credencial(Long id) {
+		super();
+		this.id = id;
+	}
+
 	//Setters and Getters.
 	
 	public Long getId() {

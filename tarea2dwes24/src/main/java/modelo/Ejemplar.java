@@ -5,7 +5,7 @@ public class Ejemplar {
 	//Atributos
 	private Long id;
 	private String nombre;
-	private Planta planta;
+	private String codigoPlanta;
 	
 	
 	 //Constructor por defecto.
@@ -14,10 +14,10 @@ public class Ejemplar {
 	}
 	
 	//Constructor
-	public Ejemplar(Long id, Planta planta) {
+	public Ejemplar(Long id, String nombre, String codigoplanta) {
 		this.id = id;
-		this.nombre = generarNombre();
-		this.planta = planta;
+		this.nombre = nombre;
+		this.codigoPlanta = codigoplanta;
 	}
 
 
@@ -40,33 +40,24 @@ public class Ejemplar {
 	public void setNombre(String nombre) {
 		this.nombre = nombre;
 	}
-
-
-	public Planta getPlanta() {
-		return planta;
+	
+	public String getCodigoPlanta() {
+		return codigoPlanta;
 	}
 
-
-	public void setCodigoPlanta(Planta planta) {
-		this.planta = planta;
+	public void setCodigoPlanta(String codigoPlanta) {
+		this.codigoPlanta = codigoPlanta;
 	}
-	
 
 	
-	//Método toString
-	
+	// to String
 	@Override
 	public String toString() {
-		return "Ejemplar [id=" + id + ", nombre=" + nombre + ", planta=" + planta + "]";
+		return "Ejemplar [id=" + id + ", nombre=" + nombre + ", codigoPlanta=" + codigoPlanta + "]";
 	}
 
 	
-	//Método Generar Nombre
 	
-	private String generarNombre() {
-        return planta.getCodigo() + "_" + id;
-    }
-
 
 	
 

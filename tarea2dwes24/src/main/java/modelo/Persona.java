@@ -6,7 +6,7 @@ public class Persona {
 	private Long id;
 	private String nombre;
 	private String email;
-	private Credencial credencial;
+	private Long idCredencial;
 	
 	
 	 //Constructor por defecto.
@@ -15,11 +15,11 @@ public class Persona {
 	}
 	
     //Constructor por parámetros.
-	public Persona(Long id, String nombre, String email, Credencial credencial) {
+	public Persona(Long id, String nombre, String email, Long idCredencial) {
 		this.id = id;
 		this.nombre = nombre;
 		this.email = email;
-		this.credencial = credencial;
+		this.idCredencial = idCredencial;
 	}
 	
 	//Getters y Setters.
@@ -48,20 +48,19 @@ public class Persona {
 		this.email = email;
 	}
 
-	public Credencial getCredencial() {
-		return credencial;
+	public Long getIdCredencial() {
+		return idCredencial;
 	}
 
-	public void setCredencial(Credencial credencial) {
-		this.credencial = credencial;
+	public void setIdCredencial(Long idCredencial) {
+		this.idCredencial = idCredencial;
 	}
 
-	
-	//Método toString
 	@Override
 	public String toString() {
-		return "Persona [id=" + id + ", nombre=" + nombre + ", email=" + email + ", credencial=" + credencial + "]";
+		return "Persona [id=" + id + ", nombre=" + nombre + ", email=" + email + ", idCredencial=" + idCredencial + "]";
 	}
+
 	
 	
 	
