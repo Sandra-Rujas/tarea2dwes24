@@ -3,20 +3,23 @@ package modelo;
 public class Planta {
 
 		
-		//Atributos
+	/** Declaración de atributos */
+	
 		private String codigo;
 		private String nombreComun;
 		private String nombreCientifico;
 		
 		
-		//Constructor
-		public Planta(String codigo, String nombreComun, String nombreCientifico) {
+		/** Constructor por defecto y por parámetros */
+		
+		public Planta(String codigo, String nombreCientifico, String nombreComun) {
 			this.codigo = codigo;
-			this.nombreComun = nombreComun;
 			this.nombreCientifico = nombreCientifico;
+			this.nombreComun = nombreComun;
 		}
 		
-		//Getters and Setters
+		/** Getters y Setters */
+		
 		public String getCodigo() {
 			return codigo;
 		}
@@ -36,12 +39,7 @@ public class Planta {
 			this.nombreCientifico = nombreCientifico;
 		}
 
-		//Método toString
-		@Override
-		public String toString() {
-			return "Planta [codigo=" + codigo + ", nombreComun=" + nombreComun + ", nombreCientifico=" + nombreCientifico
-					+ "]";
-		}
+		
 
 		
 		

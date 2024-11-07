@@ -2,32 +2,26 @@ package modelo;
 
 public class Credencial {
 	
-	//Atributos
+	/**Declaración de atributos*/
+	
 	private Long id;
 	private String usuario;
 	private String password;
 	
-	 //Constructor por defecto.
+	
+	/**Constructor por defecto y por parámetros*/
+	
     public Credencial() {
 		
 	}
 	
-	//Constructor
-	public Credencial(Long id, String usuario, String password) {
-		this.id = id;
+	public Credencial(String usuario, String password) {
 		this.usuario = usuario;
 		this.password = password;
 	}
 	
 	
-	
-	
-	public Credencial(Long id) {
-		super();
-		this.id = id;
-	}
-
-	//Setters and Getters.
+	/**Getters y Setters*/ 
 	
 	public Long getId() {
 		return id;
@@ -48,12 +42,8 @@ public class Credencial {
 		this.password = password;
 	}
 
-	//Método ToString
-	@Override
-	public String toString() {
-		return "Credencial [id=" + id + ", usuario=" + usuario + ", password=" + password + "]";
-	}
 	
 
+	
 	
 }

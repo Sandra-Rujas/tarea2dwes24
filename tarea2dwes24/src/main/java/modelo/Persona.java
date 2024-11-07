@@ -2,27 +2,27 @@ package modelo;
 
 public class Persona {
 	
-	//Atributos
+	/** Declaración de atributos */
+	
 	private Long id;
 	private String nombre;
 	private String email;
 	private Long idCredencial;
+
 	
+	/** Constructor por defecto y por parámetros */
 	
-	 //Constructor por defecto.
     public Persona() {
 		
 	}
 	
-    //Constructor por parámetros.
-	public Persona(Long id, String nombre, String email, Long idCredencial) {
-		this.id = id;
+	public Persona(String nombre, String email) {
 		this.nombre = nombre;
 		this.email = email;
-		this.idCredencial = idCredencial;
+		
 	}
 	
-	//Getters y Setters.
+	/** Getters y Setters */
 
 	public Long getId() {
 		return id;
@@ -56,10 +56,6 @@ public class Persona {
 		this.idCredencial = idCredencial;
 	}
 
-	@Override
-	public String toString() {
-		return "Persona [id=" + id + ", nombre=" + nombre + ", email=" + email + ", idCredencial=" + idCredencial + "]";
-	}
 
 	
 	
