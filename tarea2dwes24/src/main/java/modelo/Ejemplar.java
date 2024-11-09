@@ -14,9 +14,7 @@ public class Ejemplar {
 
 	}
 
-	public Ejemplar(Long id, String codigoplanta) {
-		this.id = id;
-		this.nombre = id + "_" + codigoplanta;
+	public Ejemplar(String codigoplanta) {
 		this.codigoPlanta = codigoplanta;
 	}
 
@@ -45,5 +43,10 @@ public class Ejemplar {
 	public void setCodigoPlanta(String codigoPlanta) {
 		this.codigoPlanta = codigoPlanta;
 	}
+	
+	 @Override
+	    public String toString() {
+	        return "ID EJEMPLAR: " + id + " CODIGO PLANTA: " + codigoPlanta;
+	    }
 
 }

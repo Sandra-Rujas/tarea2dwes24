@@ -18,8 +18,7 @@ public class Mensaje {
 
 	}
 
-	public Mensaje(Long id, String mensaje, Long idEjemplar, Long idPersona) {
-		this.id = id;
+	public Mensaje(String mensaje, Long idEjemplar, Long idPersona) {
 		this.fechaHora = LocalDateTime.now();
 		this.mensaje = mensaje;
 		this.idEjemplar = idEjemplar;
