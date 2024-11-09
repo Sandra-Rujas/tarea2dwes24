@@ -26,8 +26,8 @@ public class ServicioCredencial {
 			return credencialDAO.insertarCredencial(credencial);
 		}
 		
-		public int borrarCredencial(Long codigo) {
-			return credencialDAO.borrarCredencial(codigo);
+		public boolean insertarCredencial(String usuario, String password, Long id) {
+			return credencialDAO.insertarCredencial(usuario, password, id);
 		}
 		
 		
@@ -43,7 +43,6 @@ public class ServicioCredencial {
 			return credencialDAO.getCredencialesPorUsuario(usuario);
 		}
 		
-		//Añadidos hoy 05/11.
 		public boolean autenticarAdmin(String usuario,String password) {
 			
 			return credencialDAO.autenticarAdmin(usuario,password);
@@ -70,13 +69,17 @@ public class ServicioCredencial {
 			return false;
 		}
 		public Long getIdCredenciales(String usuario) {
-			Credencial credenciales = credencialDAO.getCredencialesPorUsuario(usuario);
-			if (credenciales != null) {
-				return credenciales.getId();
+			Credencial credencial = credencialDAO.getCredencialesPorUsuario(usuario);
+			if (credencial != null) {
+				return credencial.getId();
 			}
 			
 			return 0L;
 			
+		}
+		
+		public Long getIdPersona(String usuario) {
+			return credencialDAO.getIdPersona(usuario);
 		}
 		
 	}
