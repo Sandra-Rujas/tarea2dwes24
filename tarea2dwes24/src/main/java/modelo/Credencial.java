@@ -19,7 +19,7 @@ public class Credencial {
     public Credencial(String usuario, String password) {
 		this.usuario = usuario;
 		this.password = password;
-	}
+    }
 	   
 	
 	public Credencial(String usuario, String password, Long idPersona) {
