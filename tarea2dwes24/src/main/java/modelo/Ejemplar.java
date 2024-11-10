@@ -20,10 +20,16 @@ public class Ejemplar {
 	
 
 	public Ejemplar(Long id, String codigoPlanta) {
-		super();
 		this.id = id;
 		this.codigoPlanta = codigoPlanta;
 	}
+	
+	public Ejemplar(Long id,String nombre, String codigoPlanta) {
+		this.id = id;
+		this.nombre=nombre;
+		this.codigoPlanta = codigoPlanta;
+	}
+	
 
 	/**Getters y Setters*/ 
 	
@@ -53,7 +59,7 @@ public class Ejemplar {
 	
 	 @Override
 	    public String toString() {
-	        return "ID EJEMPLAR: " + id + " CODIGO PLANTA: " + codigoPlanta;
+	        return "ID EJEMPLAR: " + id + "NOMBRE: " + nombre + " CODIGO PLANTA: " + codigoPlanta;
 	    }
 
 }

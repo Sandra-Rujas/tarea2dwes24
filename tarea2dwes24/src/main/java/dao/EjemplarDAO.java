@@ -44,7 +44,7 @@ public class EjemplarDAO {
 			if(resultado > 0) {
 				
 				/*Actualizamos el nombre del ejemplar*/
-				String sqlActualizarNombre = "UPDATE ejemplares SET nombre = CONCAT(id, '-', idplanta) WHERE id = LAST_INSERT_ID()";
+				String sqlActualizarNombre = "UPDATE ejemplares SET nombre = CONCAT(id, '_', UPPER(idplanta)) WHERE id = LAST_INSERT_ID()";
 	            PreparedStatement psActualizar = con.prepareStatement(sqlActualizarNombre);
 	            psActualizar.executeUpdate();
 	            
@@ -127,8 +127,9 @@ public class EjemplarDAO {
             while (rs.next()) {
             	
                 Long id = rs.getLong("id");
+                String nombre = rs.getString("nombre");
                 String codigoPlanta = rs.getString("idplanta");
-                Ejemplar ejemplar = new Ejemplar(id, codigoPlanta);
+                Ejemplar ejemplar = new Ejemplar(id, nombre, codigoPlanta);
 
                 listaEjemplaresPorPlanta.add(ejemplar);
                 
