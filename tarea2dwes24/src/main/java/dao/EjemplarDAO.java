@@ -84,10 +84,10 @@ public class EjemplarDAO {
 				ps=con.prepareStatement(sql);
 				ResultSet rs = ps.executeQuery();
 	            while (rs.next()) {	
-	               
+	            	Long id = rs.getLong("id");
+	            	String nombre = rs.getNString("nombre");
 	                String codigoPlanta = rs.getString("idplanta");
-	                Ejemplar ejemplar = new Ejemplar(codigoPlanta);
-	                ejemplar.setId(rs.getLong(1));
+	                Ejemplar ejemplar = new Ejemplar(id, nombre, codigoPlanta);
 
 	                listaEjemplares.add(ejemplar);
 	            }

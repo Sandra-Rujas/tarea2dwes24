@@ -656,7 +656,8 @@ public class ViveroFachadaAdmin {
 				do {
 					
 					try {
-
+						
+						sc.nextLine();
 						System.out.println("Introduce la primera fecha para ver los mensajes (01-01-0000): ");
 						String fecha1Str = sc.nextLine();
 						fecha1 = LocalDate.parse(fecha1Str, formatter);

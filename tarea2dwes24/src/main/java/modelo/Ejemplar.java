@@ -59,7 +59,7 @@ public class Ejemplar {
 	
 	 @Override
 	    public String toString() {
-	        return "ID EJEMPLAR: " + id + "NOMBRE: " + nombre + " CODIGO PLANTA: " + codigoPlanta;
+	        return "ID EJEMPLAR: " + id + " NOMBRE: " + nombre + " CODIGO PLANTA: " + codigoPlanta;
 	    }
 
 }
