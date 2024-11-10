@@ -13,197 +13,189 @@ import utils.ConexionBD;
 public class EjemplarDAO {
 	
 
-	//Declaración de variables para la consultas.
-	 PreparedStatement ps;
-	 Connection con;
-	 ResultSet rs;
+	private Connection con;
+	static PreparedStatement ps;
+	static ResultSet rs;
 	
-	
-	//Conexión a la base de datos.
+
 	public EjemplarDAO(Connection con) {
 		this.con = con;
 	}
 	
-	/*Método insertar ejemplar nuevo.
-	 * Comprobamos la conexión.
-	 * Declaramos una variable int resultado para obtener el total de filas afectadas. 
-	 * Devuelve 0 si no se realiza ninguna inserción. En caso de que sea añadida la fila, devuelve 1 ya que el metodo 'executeipdate()' 
-	 * devuelve un entero con el total de filas afectadas.
-	 * Pedimos por parámetro el ejemplar y lo añadido al PrepareStatememt sacando los valores necesarios para la query
-	 * Cerramos conexión BD.
-	 * Tratamos las excepciones.
+	/**
+	 * Inserta un ejemplar en la base de datos y actualiza su nombre concatenando el id y el código de planta.
+	 * @param ejemplar. Contiene el código de la planta del ejemplar a insertar.
+	 * @return El número de filas afectadas por la inserción (1 si fue exitosa, 0 si no).
+	 * @throws SQLException Si ocurre un error durante la ejecución de las consultas SQL.
 	 */
+	
 	public int insertarEjemplar(Ejemplar ejemplar) {
+		
 		int resultado = 0;
+		
 		try {
-			if (con == null) {
-				con = ConexionBD.getConexion();
-				}
 			
-			String sql="INSERT INTO ejemplar(id,nombre,email,credencial) VALUES (?,?,?,?)";
-
+			String sql="INSERT INTO ejemplares(idplanta) VALUES (?)";
 			
 			ps=con.prepareStatement(sql);
-			ps.setLong(1, ejemplar.getId());
-			ps.setString(2, ejemplar.getNombre());
-			ps.setString(3, ejemplar.getCodigoPlanta());
+			ps.setString(1, ejemplar.getCodigoPlanta());
 			resultado = ps.executeUpdate();
+			
 			if(resultado > 0) {
+				
+				/*Actualizamos el nombre del ejemplar*/
+				String sqlActualizarNombre = "UPDATE ejemplares SET nombre = CONCAT(id, '-', idplanta) WHERE id = LAST_INSERT_ID()";
+	            PreparedStatement psActualizar = con.prepareStatement(sqlActualizarNombre);
+	            psActualizar.executeUpdate();
+	            
+	            /*Recuperamos el id del ejemplar*/
+	            String sqlGetId = "SELECT LAST_INSERT_ID()"; 
+	            PreparedStatement psGetId = con.prepareStatement(sqlGetId);
+	            ResultSet rs = psGetId.executeQuery();
+	            if (rs.next()) {
+	                ejemplar.setId(rs.getLong(1)); 
+	            }
 				return resultado;
 			}
-			con.close();
 			
 		}catch(SQLException e) {
 			
-			System.err.println("Error al guardar la persona: "+e.getMessage());
+			System.err.println("Error al guardar el ejemplar: "+e.getMessage());
 			e.printStackTrace();
 		}
 		return resultado;
 	}
-
-	/*Método borrar ejemplar según el id.
-	 * Comprobamos la conexión.
-	 *Pedimos por parámetro el id del ejemplar que queremos eliminar.
-	 *Como en el anterior método, devuelve un entero que representa el número de filas afectadas por la
-	 *operación de eliminación. Devuelve un 0 si no se elimina ninguna fila.
-	 *Cerramos conexión BD.
-	 *Tratamos las excepciones.
+	
+	/**
+	 * Recupera todos los ejemplares de la base de datos.
+	 * Luego, por cada registro, crea un objeto ejemplar y lo agrega a una lista de ejemplares.
+	 * @return Una lista de objetos Ejemplar que contiene todos los ejemplares recuperados de la base de datos.
+	 * Si no se encuentran ejemplares, se devuelve una lista vacía.
+	 * @throws SQLException Si ocurre un error durante la ejecución de la consulta SQL.
 	 */
-	public int borrarEjemplar(Long id) {
-		int resultado = 0;
-		try {
-		
-		if (con == null) {
-			con = ConexionBD.getConexion();
-			}
-		
-		String sql="DELETE FROM ejemplar WHERE id=?";		
-		ps = con.prepareStatement(sql);
-		ps.setLong(1, id);
-		resultado = ps.executeUpdate(sql);
-		if(resultado > 0) {
-			return resultado;
-		}
-		con.close();
-			
-			
-		} catch (SQLException e) {
-			System.err.println("Error al borrar la persona: "+e.getMessage());
-
-			e.printStackTrace();
-			
-		}
-		return resultado;
-	}
 	
-
-	/* Método actualizar ejemplar según el id.
-	 *Comprobamos la conexión con al BD.
-	 *Preparamos la query con el metodo prepareStatement añadiendo el id para completarla
-	 * Devuelve un entero que representa el número de filas afectadas por la
-	 *operación de actualización. Devuelve un 0 si no se actualiza ninguna fila.
-	 *Cerramos conexión.
-	 *Tratamos las excepciones.
-	 */
-	public int actualizarEjemplar(Long id) {
-		int resultado = 0;
-		con = null;
-		try {
-			if (con == null) {
-				con = ConexionBD.getConexion();
-			}
-			
-			String sql = "UPDATE FROM ejemplar WHERE id = ?" ;
-			ps = con.prepareStatement(sql);
-			ps.setLong(1, id);
-			resultado = ps.executeUpdate(sql);
-			if(resultado > 0) {
-				return resultado;
-			}
-			con.close();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return resultado;
-	}
-	
-	
-	/*Método devolver todos los ejemplares.
-	 * Creamos la lista de ejemplares.
-	 * Comprobamos la conexión.
-	 * Recorremos todas los ejemplares obtenemos los valores de cada uno y los vamos creando.
-	 * Añadimos los ejemplares a una lista.
-	 * Y devuelve esa misma lista.
-	 * Tratamos las excepciones. */
 	public List<Ejemplar> findAll() {
+		
 			ArrayList<Ejemplar> listaEjemplares = new ArrayList<Ejemplar>();
-			con = null;
 			
 			try {
-				if (con == null) {
-					con = ConexionBD.getConexion();
-				}	
-				String sql="SELECT *  FROM ejemplar";
+					
+				String sql="SELECT *  FROM ejemplares";
 				ps=con.prepareStatement(sql);
 				ResultSet rs = ps.executeQuery();
-
-	            while (rs.next()) {
-	                Long id = rs.getLong("id");
-	                String nombre = rs.getString("nombre");
-	                String codigoPlanta = rs.getString("codigoPlanta");
-
-	                Ejemplar ejemplar = new Ejemplar(id, nombre, codigoPlanta);
+	            while (rs.next()) {	
+	               
+	                String codigoPlanta = rs.getString("idplanta");
+	                Ejemplar ejemplar = new Ejemplar(codigoPlanta);
+	                ejemplar.setId(rs.getLong(1));
 
 	                listaEjemplares.add(ejemplar);
 	            }
-	            con.close(); 	
 	            
 			}catch(SQLException e) {
-				System.err.println("Error al buscar la persona: "+ e.getMessage());
+				
+				System.err.println("Error al buscar el ejemplar: "+ e.getMessage());
 				e.printStackTrace();		
 		}
 			return listaEjemplares;
 	}
 	
-
-	/*Método encontrar ejemplar por id.
-	 * Pedimos por parámetro el id.
-	 * Comprobamos conexión.
-	 * Recorremos la tabla Ejemplar hasta encontrar el id.
-	 * Si lo encontramos devolvemos el ejemplar con todos sus atributos.
-	 * Cerramos la conexión.
-	 * Tratamos las excepciones.
-	*/
-	public Ejemplar findById(Long id) {
+	
+	/**
+	 * Este método realiza una consulta SQL para obtener todos los ejemplares cuya columna idplanta
+	 * coincida con el código de la planta proporcionado como parámetro. Devuelve una lista de objetos Ejemplar.
+	 * que corresponden a los ejemplares asociados a la planta indicada.
+	 * @param codigo. El código de la planta para la cual se buscan los ejemplares.
+	 * @return Una lista de objetos Ejemplar que corresponden a los ejemplares de la planta
+	 * indicada. Si no se encuentran ejemplares para esa planta, se devuelve una lista vacía.
+	 * @throws SQLException Si ocurre un error durante la ejecución de la consulta SQL.
+	 */
+	
+		public List<Ejemplar> buscarEjemplaresPorPlanta(String codigo) {
+			
+		ArrayList<Ejemplar> listaEjemplaresPorPlanta = new ArrayList<Ejemplar>();
 		
-			Ejemplar ejemplar=null;
+		try {
+			
+			String sql="SELECT *  FROM ejemplares WHERE idplanta = ?";
+			
+			ps=con.prepareStatement(sql);
+			ps.setString(1, codigo);
+			
+			ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+            	
+                Long id = rs.getLong("id");
+                String codigoPlanta = rs.getString("idplanta");
+                Ejemplar ejemplar = new Ejemplar(id, codigoPlanta);
+
+                listaEjemplaresPorPlanta.add(ejemplar);
+                
+            }
+            
+		}catch(SQLException e) {
+			
+			System.err.println("Error al buscar el ejemplar: "+ e.getMessage());
+			e.printStackTrace();		
+	}
+		return listaEjemplaresPorPlanta;
+}
+	
+
+		/**
+		 * Este método ejecuta una consulta SQL para buscar un ejemplar en la tabla ejemplares utilizando su id.
+		 * Si el ejemplar existe, devuelve su id. En caso contrario, devuelve 0.
+		 * @param id. El id del ejemplar a buscar.
+		 * @return El id del ejemplar encontrado, o 0 si no se encuentra ningún ejemplar con el id dado.
+		 * @throws SQLException Si ocurre un error durante la ejecución de la consulta SQL.
+		 */
+		
+	public int findById(Long id) {
+		
+			int resultado = 0; 
 			try {
-				if (con == null) {
-					con = ConexionBD.getConexion();
+				
+				String sql="SELECT * FROM ejemplares WHERE id=?";
+				ps=con.prepareStatement(sql);
+				ps.setLong(1, id);
+				rs=ps.executeQuery();
+				
+				if(rs.next()) {
+		            resultado = rs.getInt("id");
 				}
 			
-			String sql="SELECT * FROM ejemplar WHERE id=?";
-			ps=con.prepareStatement(sql);
-			ps.setLong(1, id);
-			rs=ps.executeQuery();
+			}catch(SQLException e) {
 			
-			if(rs.next()) {
-				
-				Long codigo=rs.getLong("id");
-				String nombre=rs.getString("nombre");
-				String codigoPlanta=rs.getString("codigoPlanta");
-				
-				ejemplar=new Ejemplar(codigo,nombre,codigoPlanta);
-				
-			}
-			con.close();
-			
-		}catch(SQLException e) {
 			System.err.println("Error al buscar la persona por código: "+ e.getMessage());
-			e.printStackTrace();	
-			
-		} 	
-			return ejemplar;
+			e.printStackTrace();			
+			} 	
+			return resultado;
+	}
+	/**
+	 * Este método ejecuta una consulta SQL para verificar si hay un ejemplar en la tabla ejemplares
+	 * con el id specificado. Devuelve true si el ejemplar existe, o false si no se encuentra.
+	 * @param codigo El id del ejemplar que se desea verificar.
+	 * @return true si el ejemplar con el {@code id} proporcionado existe en la base de datos; false en caso contrario.
+	 * @throws SQLException Si ocurre un error durante la ejecución de la consulta SQL.
+	 */
+	
+	public boolean codigoExistente(Long codigo) {
+		 String sql = "SELECT id FROM ejemplares WHERE id = ?";
+		    
+		    try  {
+		    	PreparedStatement ps = con.prepareStatement(sql);
+		        ps.setLong(1, codigo);
+		        
+		        try (ResultSet rs = ps.executeQuery()) {
+		            return rs.next(); 
+		        }
+		        
+		    } catch (SQLException e) {
+		        e.printStackTrace();
+		    }
+		    
+		    return false; 
 	}
 
 
