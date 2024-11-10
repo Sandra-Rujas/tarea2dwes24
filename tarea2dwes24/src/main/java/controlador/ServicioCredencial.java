@@ -30,7 +30,6 @@ public class ServicioCredencial {
 			return credencialDAO.insertarCredencial(usuario, password, id);
 		}
 		
-		
 		public List<Credencial> mostrarPlantas(){
 			return credencialDAO.findAll();
 		}
@@ -63,19 +62,14 @@ public class ServicioCredencial {
 		}
 		
 		public boolean existeUsuario(String nombreUsuario) {
-			if (credencialDAO.isUsuarioRegistrado(nombreUsuario)) {
-				return true;
+			return credencialDAO.isUsuarioRegistrado(nombreUsuario);
+	
 			}
-			return false;
-		}
+		
 		public Long getIdCredenciales(String usuario) {
 			Credencial credencial = credencialDAO.getCredencialesPorUsuario(usuario);
-			if (credencial != null) {
-				return credencial.getId();
-			}
-			
-			return 0L;
-			
+			return credencial.getId();
+	
 		}
 		
 		public Long getIdPersona(String usuario) {

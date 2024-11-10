@@ -11,8 +11,6 @@ import utils.ConexionBD;
 
 public class ServicioMensaje {
 	
-
-	
 	private ConexionBD con;
 	private MensajeDAO mensajeDAO;
 	
@@ -22,18 +20,8 @@ public class ServicioMensaje {
 	}
 	
 	
-	
 	public int insertarMensaje(Mensaje mensaje) {
 		return mensajeDAO.insertarMensaje(mensaje);
-	}
-	
-	
-	public int modificarMensaje(String codigo) {
-		return mensajeDAO.actualizarMensaje(codigo);
-	}	
-	
-	public int borrarMensaje(String codigo) {
-		return mensajeDAO.borrarMensaje(codigo);
 	}
 	
 	
@@ -57,37 +45,4 @@ public class ServicioMensaje {
 		return mensajeDAO.buscarMensajePorPlanta(codigo);
 	}
 	
-	
-	
-	
-	/*
-	public boolean addMensaje(Long id, String men, Long idEjemplar, Long idPersona) {
-		Mensaje mensaje = new Mensaje(id, men, idEjemplar, idPersona);
-		if(mensajeDAO.insertarMensaje(mensaje) == 1) {
-			return true;
-		}
-		return false;
-		
-	}
-	
-	public boolean borrarMensaje(String id) {
-		if(mensajeDAO.borrarMensaje(id) == 1) {
-			return true;
-		}
-		return false;
-		
-	}
-	
-	public String findById(Long id) {
-		Mensaje mensaje = mensajeDAO.findById(id);
-		if (mensaje != null) {
-			return mensaje.getMensaje();
-		}
-		return null;
-	}
-	
-	public List<Mensaje> mostrarMensajes(){
-		return mensajeDAO.findAll();
-	}
-*/
 }
