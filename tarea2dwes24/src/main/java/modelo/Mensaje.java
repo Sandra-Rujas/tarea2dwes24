@@ -19,7 +19,17 @@ public class Mensaje {
 	}
 
 	public Mensaje(String mensaje, Long idEjemplar, Long idPersona) {
-		this.fechaHora = LocalDateTime.now();
+		this.mensaje = mensaje;
+		this.idEjemplar = idEjemplar;
+		this.idPersona = idPersona;
+	}
+	
+
+
+	public Mensaje(Long id, LocalDateTime fechaHora, String mensaje, Long idEjemplar, Long idPersona) {
+		super();
+		this.id = id;
+		this.fechaHora = fechaHora;
 		this.mensaje = mensaje;
 		this.idEjemplar = idEjemplar;
 		this.idPersona = idPersona;
@@ -67,4 +77,11 @@ public class Mensaje {
 		this.idPersona = idPersona;
 	}
 
+	@Override
+	public String toString() {
+		return "ID MENSAJE: " + id  + " MENSAJE: " + mensaje + " ID DEL EJEMPLAR: " + idEjemplar
+				+ " ID PERSONA: " + idPersona + " FECHA: " + fechaHora;
+	}
+
+	
 }

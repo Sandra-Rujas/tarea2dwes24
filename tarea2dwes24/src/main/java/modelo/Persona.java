@@ -10,7 +10,7 @@ public class Persona {
 	private Long idCredencial;
 
 	
-	/** Constructor por defecto y por parámetros */
+	/** Constructor por defecto y con parámetros */
 	
     public Persona() {
 		
@@ -22,6 +22,12 @@ public class Persona {
 		
 	}
 	
+	public Persona(Long id, String nombre, String email) {
+		this.id = id;
+		this.nombre = nombre;
+		this.email = email;
+	}
+
 	/** Getters y Setters */
 
 	public Long getId() {
@@ -54,6 +60,11 @@ public class Persona {
 
 	public void setIdCredencial(Long idCredencial) {
 		this.idCredencial = idCredencial;
+	}
+
+	@Override
+	public String toString() {
+		return "ID PERSONA: " + id + " NOMBRE: " + nombre;
 	}
 
 

@@ -14,8 +14,15 @@ public class Ejemplar {
 
 	}
 
-	public Ejemplar(String codigoplanta) {
-		this.codigoPlanta = codigoplanta;
+	public Ejemplar(String codigoPlanta) {
+		this.codigoPlanta = codigoPlanta;
+	}
+	
+
+	public Ejemplar(Long id, String codigoPlanta) {
+		super();
+		this.id = id;
+		this.codigoPlanta = codigoPlanta;
 	}
 
 	/**Getters y Setters*/ 
