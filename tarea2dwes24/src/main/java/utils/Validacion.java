@@ -4,6 +4,8 @@ import java.sql.Date;
 import java.time.LocalDate;
 import java.util.Scanner;
 
+import modelo.Ejemplar;
+
 public class Validacion {
 	
 	static Scanner sc = new Scanner (System.in);
@@ -35,32 +37,6 @@ public class Validacion {
 		return codigo.matches("^[A-Za-z]{1,50}$");
 	}
 	
-	
-	/*Método para validar fecha*/
-	public static java.sql.Date leerFecha() {
-        Date ret = null;
-        int dia, mes, anio;
-        boolean correcto = false;
-        do {
-            System.out.println("Introduzca un valor para el día (1...31)");
-            sc = new Scanner(System.in, "ISO-8859-1");
-            dia = sc.nextInt();
-            System.out.println("Introduzca un valor para el mes (1...12)");
-            sc = new Scanner(System.in, "ISO-8859-1");
-            mes = sc.nextInt();
-            System.out.println("Introduzca un valor para el año");
-            sc = new Scanner(System.in, "ISO-8859-1");
-            anio = sc.nextInt();
 
-            try {
-                ret = Date.valueOf(LocalDate.of(anio, mes, dia));
-                correcto = true;
-            } catch (Exception e) {
-                System.out.println("Fecha introducida incorrecta.");
-                correcto = false;
-            }
-        } while (!correcto);
-        return ret;
-    }
 
 }
