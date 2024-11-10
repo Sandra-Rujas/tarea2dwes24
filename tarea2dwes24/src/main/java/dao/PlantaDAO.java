@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,44 +12,38 @@ import modelo.Planta;
 import utils.ConexionBD;
 
 public class PlantaDAO {
-
-	// Declaración de variables para la consultas.
+	
+	private Connection con;
 	static PreparedStatement ps;
-	static Connection con;
-	ResultSet rs;
+	static ResultSet rs;
 
-	// Conexión a la base de datos.
+	
 	public PlantaDAO(Connection con) {
 		this.con = con;
+
 	}
 
-	/*Método insertar planta nueva.
-	 * Comprobamos la conexión.
-	 * Declaramos una variable int resultado para obtener el total de filas afectadas. 
-	 * Devuelve 0 si no se realiza ninguna inserción. En caso de que sea añadida la fila, devuelve 1 ya que el metodo 'executeipdate()' 
-	 * devuelve un entero con el total de filas afectadas.
-	 * Pedimos por parámetro la planta y lo añadido al PrepareStatememt sacando los valores necesarios para la query
-	 * Cerramos conexión BD.
-	 * Tratamos las excepciones.
+	
+	/**
+	 * Este método inserta una planta con los detalles proporcionados en la tabla `plantas`.
+	 * Devuelve el número de filas afectadas por la operación (debería ser 1 si la inserción es exitosa).
+	 * @param planta Objeto de tipo `Planta` que contiene los datos de la planta a insertar.
+	 * @return El número de filas afectadas por la inserción (1 si se inserta correctamente, 0 si falla).
 	 */
 	public int insertarPlanta(Planta planta) {
 		int resultado = 0;
 		try {
-
-			if (con == null || con.isClosed()) {
-				con = ConexionBD.getConexion();
-			}
-
-			String sql = "INSERT INTO planta(codigo,nombrecomun,nombrecientifico) VALUES (?,?,?)";
+			
+			String sql = "INSERT INTO plantas(codigo,nombrecomun,nombrecientifico) VALUES (?,?,?)";
 			ps = con.prepareStatement(sql);
 			ps.setString(1, planta.getCodigo());
 			ps.setString(2, planta.getNombrecomun());
 			ps.setString(3, planta.getNombrecientifico());
 			resultado = ps.executeUpdate();
+			
 			if (resultado > 0) {
 				return resultado;
 			}
-			con.close();
 
 		} catch (SQLException e) {
 
@@ -60,61 +55,60 @@ public class PlantaDAO {
 	}
 
 	
-	/*Método borrar planta según el id.
-	 * Comprobamos la conexión.
-	 *Pedimos por parámetro el id del ejemplar que queremos eliminar.
-	 *Como en el anterior método, devuelve un entero que representa el número de filas afectadas por la
-	 *operación de eliminación. Devuelve un 0 si no se elimina ninguna fila.
-	 *Cerramos conexión BD.
-	 *Tratamos las excepciones.
+	
+	/**
+	 * Este método realiza una consulta a la base de datos para contar las plantas que tienen
+	 * el mismo código que la planta proporcionada. Si la consulta devuelve un valor mayor a 0,
+	 * se considera que la planta existe.
+	 * @param planta La planta cuyo código se quiere verificar.
+	 * @return `true` si la planta existe en la base de datos, `false` en caso contrario.
 	 */
-	public int borrarPlanta(String codigo) {
-		int resultado = 0;
-		try {
+	public boolean validarPlanta(Planta planta) {
+	    boolean existe = false;
 
-			if (con == null || con.isClosed()) {
-				con = ConexionBD.getConexion();
-			}
+	    try {
+	        String sql = "SELECT COUNT(*) FROM plantas WHERE codigo = ?";
+	        ps = con.prepareStatement(sql);
+	        ps.setString(1, planta.getCodigo());
 
-			String sql = "DELETE FROM planta WHERE codigo=?";
-			ps = con.prepareStatement(sql);
-			ps.setString(1, codigo);
-			resultado = ps.executeUpdate(sql);
-			if (resultado > 0) {
-				return resultado;
-			}
+	        try (ResultSet rs = ps.executeQuery()) {
+	            if (rs.next()) {
+	                int count = rs.getInt(1);
+	                existe = (count > 0); 
+	            }
+	        }
 
-		} catch (SQLException e) {
+	    } catch (SQLException e) {
+	        System.err.println("Error al validar la planta: " + e.getMessage());
+	        e.printStackTrace();
+	    }
 
-			e.printStackTrace();
-
-		}
-		return resultado;
+	    return existe;
 	}
+	
+	
 
-	/* Método actualizar planta según el id.
-	 *Comprobamos la conexión con al BD.
-	 *Preparamos la query con el metodo prepareStatement añadiendo el id para completarla
-	 * Devuelve un entero que representa el número de filas afectadas por la
-	 *operación de actualización. Devuelve un 0 si no se actualiza ninguna fila.
-	 *Cerramos conexión.
-	 *Tratamos las excepciones.
+	/**
+	 * Este método actualiza los campos `nombrecomun` y `nombrecientifico` de la tabla `plantas`
+	 * para la planta cuyo `codigo` coincide con el código proporcionado. Si la actualización es exitosa,
+	 * se retorna el número de filas afectadas. Si no se realizaron cambios, se retorna 0.
+	 * @param planta La planta que contiene los nuevos datos a actualizar.
+	 * @return El número de filas afectadas por la actualización. Un valor mayor que 0 indica éxito.
 	 */
-	public int actualizarPlanta(String codigo) {
+	public int actualizarPlanta(Planta planta) {
 		int resultado = 0;
 		try {
-			if (con == null || con.isClosed()) {
-				con = ConexionBD.getConexion();
-			}
 
-			String sql = "UPDATE FROM planta WHERE id = ?";
+			String sql = "UPDATE plantas SET nombrecomun = ?, nombrecientifico = ? WHERE codigo = ?";
 			ps = con.prepareStatement(sql);
-			ps.setString(1, codigo);
-			resultado = ps.executeUpdate(sql);
+			ps.setString(1, planta.getNombrecomun());
+			ps.setString(2, planta.getNombrecientifico());
+			ps.setString(3, planta.getCodigo());
+			resultado = ps.executeUpdate();
+			
 			if (resultado > 0) {
 				return resultado;
 			}
-			con.close();
 			
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -122,22 +116,20 @@ public class PlantaDAO {
 		return resultado;
 	}
 
-	/*Método devolver todos las plantas.
-	 * Creamos la lista de ejemplares.
-	 * Comrpobamos la conexión.
-	 * Recorremos todas las plantas obtenemos los valores de cada una y las vamos creando.
-	 * Añadimos las plantas a una lista.
-	 * Y devuelve esa misma lista.
-	 * Tratamos las excepciones. */
-	public List<Planta> findAll() {
+	
+	/**
+	 * Este método ejecuta una consulta SQL para obtener todas las filas de la tabla `plantas`. 
+	 * Por cada fila recuperada, se crea un objeto de tipo `Planta` con los datos correspondientes 
+	 * (`codigo`, `nombrecomun`, `nombrecientifico`) y se agrega a una lista. 
+	 * La lista de objetos `Planta` es devuelta como resultado.
+	 * @return Una lista de objetos `Planta` que contiene todos los registros de la tabla `plantas` 
+	 * en la base de datos. Si ocurre un error, la lista estará vacía.
+	 */
+	public List<Planta> mostrarPlantas() {
 		ArrayList<Planta> listaPlantas = new ArrayList<Planta>();
-		con = null;
-
 		try {
-			if (con == null || con.isClosed()) {
-				con = ConexionBD.getConexion();
-			}
-			String sql = "SELECT * FROM planta";
+			
+			String sql = "SELECT * FROM plantas";
 			ps = con.prepareStatement(sql);
 			ResultSet rs = ps.executeQuery();
 
@@ -151,54 +143,35 @@ public class PlantaDAO {
 				listaPlantas.add(planta);
 			}
 
-			con.close();
 		} catch (SQLException e) {
 			System.err.println("Error al buscar la planta: " + e.getMessage());
 			e.printStackTrace();
 		}
 		return listaPlantas;
+		
+
+	}
+	
+	/**
+	 * Este método busca en la tabla `plantas` si existe una planta con el código proporcionado.
+	 * @param codigo El código de la planta a verificar.
+	 * @return `true` si el código ya existe en la base de datos, `false` en caso contrario.
+	 */
+	public boolean codigoExistente(String codigo) {
+		 String sql = "SELECT codigo FROM plantas WHERE codigo = ?";
+		    
+		    try  {
+		    	PreparedStatement ps = con.prepareStatement(sql);
+		        ps.setString(1, codigo.toUpperCase());
+		    	ResultSet rs = ps.executeQuery();
+		        return rs.next(); 
+		        
+		    } catch (SQLException e) {
+		        e.printStackTrace();
+		    }
+		    
+		    return false; 
 	}
 
-
-	/*Método encontrar planta por id.
-	 * Pedimos por parámetro el id.
-	 * Comprobamos conexión.
-	 * Recorremos la tabla Planta hasta encontrar el id.
-	 * Si lo encontramos devolvemos la planta con todos sus atributos.
-	 * Cerramos la conexión.
-	 * Tratamos las excepciones.
-	*/
-	public Planta findById(String id) {
-
-		Planta planta = null;
-		con = null;
-		try {
-			if (con == null || con.isClosed()) {
-				con = ConexionBD.getConexion();
-			}
-
-			String sql = "SELECT * FROM planta WHERE id=?";
-			ps = con.prepareStatement(sql);
-			ps.setString(1, id);
-			rs = ps.executeQuery();
-
-			if (rs.next()) {
-
-				String codigo = rs.getString("codigo");
-				String nombrecomun = rs.getString("nombrecomun");
-				String nombrecientifico = rs.getString("nombrecientifico");
-
-				planta = new Planta(codigo, nombrecomun, nombrecientifico);
-
-			}
-			con.close();
-
-		} catch (SQLException e) {
-			System.err.println("Error al buscar la planta por código: " + e.getMessage());
-			e.printStackTrace();
-
-		}
-		return planta;
-	}
 
 }
